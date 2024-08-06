@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+// import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '/providers/player_provider.dart';
-import '/routes/app_routes.dart';
+// import '/routes/app_routes.dart';
 import '/models/player.dart';
 import '/widgets/custom_input_text.dart';
 import 'package:cabi_app/widgets/drawer_widgets.dart';
@@ -25,7 +25,7 @@ class CreatePlayerScreen extends ConsumerWidget {
     final TextEditingController emailCtrl = TextEditingController();
     final TextEditingController genderCtrl = TextEditingController();
     final TextEditingController birthdateCtrl = TextEditingController();
-    final TextEditingController statusCtrl = TextEditingController();
+    // final TextEditingController statusCtrl = TextEditingController();
 
     final playerIdProv = playerId == null
         ? playerEmptyProvider

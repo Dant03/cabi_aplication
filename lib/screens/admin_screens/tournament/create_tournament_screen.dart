@@ -364,7 +364,7 @@
 //   'Domingo': 'Domingo',
 // };
 
-import 'dart:convert';
+// import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -404,8 +404,8 @@ class _CreateTournamentScreenState extends ConsumerState<CreateTournamentScreen>
   final TextEditingController categoriesCtrl = TextEditingController();
 
   File? _imageFile;
-  DateTime? _selectedRegistrationDate;
-  DateTime? _selectedStartDate;
+  // DateTime? _selectedRegistrationDate;
+  // DateTime? _selectedStartDate;
 
   final ImagePicker _picker = ImagePicker();
 

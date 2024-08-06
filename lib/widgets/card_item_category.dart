@@ -3,7 +3,7 @@ import 'package:cabi_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:cabi_app/models/category.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 
 class CardItemCategory extends StatelessWidget {
   final Category category;
