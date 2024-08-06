@@ -1,9 +1,9 @@
 import 'package:cabi_app/providers/tournament_provider.dart';
-import 'package:cabi_app/routes/app_routes.dart';
+// import 'package:cabi_app/routes/app_routes.dart';
 import 'package:cabi_app/widgets/card_item_tournament.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+// import 'package:go_router/go_router.dart';
 
 class TournamentUserScreen extends ConsumerWidget {
   const TournamentUserScreen({super.key});
