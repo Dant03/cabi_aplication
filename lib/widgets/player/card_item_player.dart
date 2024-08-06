@@ -63,7 +63,7 @@ class CardItemPlayer extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'Fecha de Nacimiento: ${DateFormat('dd/MM/yyyy').format(player.birthdate)}',
+                        'Fecha de Nacimiento: ${DateFormat('dd/MM/yyyy').format(player.birthdate!)}',
                         style: TextStyle(
                           color: Colors.grey[600],
                         ),

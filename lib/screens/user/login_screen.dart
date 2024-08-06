@@ -55,7 +55,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
             TextField(
               controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(labelText: 'Contraseña'),
               obscureText: true,
             ),
             const SizedBox(height: 20),
@@ -63,14 +63,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ? const CircularProgressIndicator()
                 : ElevatedButton(
                     onPressed: _login,
-                    child: const Text('Login'),
+                    child: const Text('Iniciar'),
                   ),
             const SizedBox(height: 20),
             TextButton(
               onPressed: () {
                 context.push(AppRoutes.registerScreen);
               },
-              child: const Text('Don\'t have an account? Register'),
+              child: const Text('No tienes cuenta? Registrate'),
             ),
           ],
         ),

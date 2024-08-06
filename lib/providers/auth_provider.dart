@@ -8,8 +8,7 @@ final dioProvider = Provider<Dio>((ref) => Dio(BaseOptions(
     validateStatus: (status) => true,
     connectTimeout: const Duration(seconds: 5),
     receiveTimeout: const Duration(seconds: 3),
-    baseUrl: dotenv.env['BASE_URL']!
-)));
+    baseUrl: dotenv.env['BASE_URL']!)));
 
 final storage = FlutterSecureStorage();
 
@@ -23,7 +22,7 @@ class AuthService {
   AuthService(this.dio);
 
   Future<User?> login(String email, String password) async {
-    final response = await dio.post('/auth/login', data: {
+    final response = await dio.post('/users', data: {
       'email': email,
       'password': password,
     });
@@ -37,6 +36,7 @@ class AuthService {
 
   Future<User?> register(User user) async {
     final response = await dio.post('/users', data: user.toJson());
+    print("auth_provider: ${user.toJson()}");
     if (response.statusCode == 201) {
       final newUser = User.fromJson(response.data['user']);
       await storage.write(key: 'token', value: response.data['token']);

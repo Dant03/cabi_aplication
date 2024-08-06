@@ -13,7 +13,7 @@ class CustomInputText extends StatelessWidget {
     this.hintText,
     this.helper,
     required this.controller,
-    this.keyboardType = TextInputType.text
+    this.keyboardType = TextInputType.text,
   });
 
   @override

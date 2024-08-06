@@ -1,28 +1,29 @@
+import 'package:cabi_app/widgets/player/card_item_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '/providers/team_provider.dart';
+import '/providers/player_provider.dart';
 import '/routes/app_routes.dart';
-import '/widgets/card_item_team.dart';
 
-class TeamScreen extends ConsumerWidget {
-  const TeamScreen({Key? key}) : super(key: key);
+
+class PlayerScreen extends ConsumerWidget {
+  const PlayerScreen({Key? key, required String playerId}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final teamsProv = ref.watch(getTeamsProvider);
+    final playersProv = ref.watch(getPlayersProvider);
 
     Future<void> onRefresher() async {
-      ref.invalidate(getTeamsProvider);
+      ref.invalidate(getPlayersProvider);
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Equipos'),
+        title: const Text('Jugadores'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.push(AppRoutes.createUpdateTeam);
+          context.push(AppRoutes.createUpdatePlayer);
         },
         child: const Icon(Icons.add),
       ),
@@ -32,10 +33,10 @@ class TeamScreen extends ConsumerWidget {
           children: [
             Column(
               children: [
-                teamsProv.when(
-                    data: (teams) => Column(
-                          children: teams
-                              .map((t) => CardItemTeam(team: t))
+                playersProv.when(
+                    data: (players) => Column(
+                          children: players
+                              .map((p) => CardItemPlayer(player: p))
                               .toList(),
                         ),
                     error: (err, trace) => Column(

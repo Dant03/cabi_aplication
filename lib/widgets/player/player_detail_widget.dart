@@ -23,7 +23,7 @@ class PlayerDetailWidget extends StatelessWidget {
           Text('Teléfono: ${player.phone}'),
           Text('Email: ${player.email}'),
           Text('Género: ${player.gender}'),
-          Text('Fecha de Nacimiento: ${DateFormat('dd/MM/yyyy').format(player.birthdate)}'),
+          Text('Fecha de Nacimiento: ${DateFormat('dd/MM/yyyy').format(player.birthdate!)}'),
           Text('Estado: ${player.status}'),
         ],
       ),

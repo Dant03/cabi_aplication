@@ -1,42 +1,36 @@
-import 'package:cabi_app/widgets/player/card_item_player.dart';
+import 'package:cabi_app/providers/tournament_provider.dart';
+import 'package:cabi_app/routes/app_routes.dart';
+import 'package:cabi_app/widgets/card_item_tournament.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '/providers/player_provider.dart';
-import '/routes/app_routes.dart';
 
-
-class PlayerScreen extends ConsumerWidget {
-  const PlayerScreen({Key? key}) : super(key: key);
+class TournamentUserScreen extends ConsumerWidget {
+  const TournamentUserScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final playersProv = ref.watch(getPlayersProvider);
+    final tournamentsProv = ref.watch(getTournamentsProvider);
 
     Future<void> onRefresher() async {
-      ref.invalidate(getPlayersProvider);
+      ref.invalidate(getTournamentsProvider);
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Jugadores'),
+        title: const Text('Torneos'),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.push(AppRoutes.createPlayer);
-        },
-        child: const Icon(Icons.add),
-      ),
+      
       body: RefreshIndicator(
         onRefresh: onRefresher,
         child: ListView(
           children: [
             Column(
               children: [
-                playersProv.when(
-                    data: (players) => Column(
-                          children: players
-                              .map((p) => CardItemPlayer(player: p))
+                tournamentsProv.when(
+                    data: (tournaments) => Column(
+                          children: tournaments
+                              .map((t) => CardItemTournament(tournament: t))
                               .toList(),
                         ),
                     error: (err, trace) => Column(
@@ -45,7 +39,7 @@ class PlayerScreen extends ConsumerWidget {
                             Text(trace.toString())
                           ],
                         ),
-                    loading: () => const CircularProgressIndicator())
+                    loading: () => CircularProgressIndicator())
               ],
             )
           ],

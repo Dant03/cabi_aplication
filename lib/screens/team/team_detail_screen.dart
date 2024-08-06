@@ -56,7 +56,7 @@ class TeamDetailScreen extends ConsumerWidget {
           onPressed: () {
             context.push(
               Uri(
-                path: AppRoutes.createTeam,
+                path: AppRoutes.createUpdateTeam,
                 queryParameters: {"team_id": teamId},
               ).toString(),
             );

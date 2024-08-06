@@ -33,12 +33,14 @@ final playerByIdProvider =
     return Player(
         firstName: "",
         lastName: "",
-        playerNumber: 0,
+        cedula: "",
+        playerNumber: "",
         phone: '',
         email: '',
         gender: '',
         birthdate: DateTime.now(),
-        status: '');
+        // status: ''
+        );
 
   final player = Player.fromJson(response.data);
 
@@ -49,12 +51,14 @@ final playerEmptyProvider = FutureProvider<Player>((ref) {
   return Player(
       firstName: "",
       lastName: "",
-      playerNumber: 0,
+      cedula: "",
+      playerNumber: "",
       phone: '',
       email: '',
       gender: '',
       birthdate: DateTime.now(),
-      status: '');
+      // status: ''
+      );
 });
 
 final createPlayerProvider =
@@ -64,12 +68,13 @@ final createPlayerProvider =
   final response = await dio.post('/players', data: {
     "first_name": player.firstName,
     "last_name": player.lastName,
+    "cedula": player.cedula,
     "player_number": player.playerNumber,
     "phone": player.phone,
     "email": player.email,
     "gender": player.gender,
-    "birthdate": player.birthdate.toIso8601String(),
-    "status": player.status,
+    "birthdate": player.birthdate?.toIso8601String(),
+    // "status": player.status,
   });
   print("respuesta del back: ${response.data}");
   if (response.statusCode != 201) {
@@ -87,24 +92,27 @@ final updatePlayerProvider =
       await dio.patch<Player>('/players/${player.playerNumber}', data: {
     "first_name": player.firstName,
     "last_name": player.lastName,
+    "cedula": player.cedula,
     "player_number": player.playerNumber,
     "phone": player.phone,
     "email": player.email,
     "gender": player.gender,
-    "birthdate": player.birthdate.toIso8601String(),
-    "status": player.status,
+    "birthdate": player.birthdate?.toIso8601String(),
+    // "status": player.status,
   });
   print(response.data!);
   if (response.statusCode != 200) {
     return Player(
         firstName: "",
         lastName: "",
-        playerNumber: 0,
+        cedula: "",
+        playerNumber: "",
         phone: '',
         email: '',
         gender: '',
         birthdate: DateTime.now(),
-        status: '');
+        // status: ''
+        );
   }
 
   return response.data!;
@@ -120,12 +128,14 @@ final deletePlayerProvider =
     return Player(
         firstName: "",
         lastName: "",
-        playerNumber: 0,
+        cedula: "",
+        playerNumber: "",
         phone: '',
         email: '',
         gender: '',
         birthdate: DateTime.now(),
-        status: '');
+        // status: ''
+        );
   }
 
   return response.data!;

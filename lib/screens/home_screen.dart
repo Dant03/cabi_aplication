@@ -51,6 +51,12 @@ class HomeScreen extends StatelessWidget {
               },
               child: const Text('Equipos'),
             ),
+            ElevatedButton(
+              onPressed: () {
+                context.push(AppRoutes.playerScreen);
+              },
+              child: const Text('Jugadores'),
+            ),
           ],
         ),
       ),

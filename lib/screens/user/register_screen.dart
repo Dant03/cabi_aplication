@@ -17,36 +17,51 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool passwordSee = true;
   bool _isLoading = false;
 
-  void _register() async {
+  void _register() {
     setState(() {
       _isLoading = true;
     });
 
     final user = User(
-      // userId: 0, // El ID debe ser asignado por el backend
+      userId: 0, // El ID debe ser asignado por el backend
       name: _nameController.text,
       lastName: _lastNameController.text,
       email: _emailController.text,
       password: _passwordController.text,
-      role: 'user', // Ajusta esto según tu lógica de roles
-      status: 'active',
+      role: "user", // Ajusta esto según tu lógica de roles
+      status: "active",
     );
 
-    await ref.read(userProvider.notifier).register(user);
+    final userCreated = ref.read(registerProvider(user));
+    // await ref.read(userProvider.notifier).register(user);
+    // await ref.read(createUserProvider(user));
 
     setState(() {
       _isLoading = false;
     });
-
-    if (ref.read(userProvider) != null) {
-      context.go(AppRoutes.home);
-    } else {
+    if (userCreated.hasError) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Registration failed')),
       );
+      return;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registration success')),
+      );
+      context.go(AppRoutes.tournamentUserScreen);// redireccion
+      return;
     }
+
+    // if (ref.read(userProvider) != null) {
+    //   context.go(AppRoutes.home);
+    // } else {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(content: Text('Registration failed')),
+    //   );
+    // }
   }
 
   @override
@@ -61,11 +76,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           children: [
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
+              decoration: const InputDecoration(labelText: 'Nombre'),
             ),
             TextField(
               controller: _lastNameController,
-              decoration: const InputDecoration(labelText: 'Last Name'),
+              decoration: const InputDecoration(labelText: 'Apellido'),
             ),
             TextField(
               controller: _emailController,
@@ -73,7 +88,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             ),
             TextField(
               controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(labelText: 'Contraseña'),
               obscureText: true,
             ),
             const SizedBox(height: 20),
@@ -81,14 +96,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ? const CircularProgressIndicator()
                 : ElevatedButton(
                     onPressed: _register,
-                    child: const Text('Register'),
+                    child: const Text('Registro'),
                   ),
             const SizedBox(height: 20),
             TextButton(
               onPressed: () {
                 context.push(AppRoutes.loginScreen);
               },
-              child: const Text('Already have an account? Login'),
+              child: const Text('Tienes una cuenta? Inicia Sesión aquí'),
             ),
           ],
         ),

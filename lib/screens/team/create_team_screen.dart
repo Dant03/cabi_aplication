@@ -104,13 +104,7 @@ class CreateTeamScreen extends ConsumerWidget {
                               label: 'Jugadores',
                               hintText: 'Nombres de los jugadores separados por comas',
                               controller: playersCtrl,
-                            ),
-                            const Text("Estado"),
-                            CustomInputText(
-                              label: 'Estado',
-                              hintText: 'Estado del equipo',
-                              controller: statusCtrl,
-                            ),
+                            ),                            
                             const Text("Usuario ID"),
                             CustomInputText(
                               label: 'Usuario ID',

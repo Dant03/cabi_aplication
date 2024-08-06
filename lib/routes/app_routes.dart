@@ -9,16 +9,20 @@ class AppRoutes {
   static String createUpdateTournament = "/create-update-tournament";
   static String tournamentDetail = "/tournament-detail";
   static String tournamentsScreen = "/tournament-screen";
+
+  static String tournamentUserScreen = "/tournament-user-screen";
+
   static String createUpdateCategory = "/create-update-category";
   static String categoryDetail = "/category-detail";
   static String categoriesScreen = "/categories-screen";
-  static const String createTeam = "/create-team";
-  static const String teamScreen = "/team-screen";
-  static const String teamDetail = "/team-detail"; 
 
-  static const String createPlayer = "/create-player";
-  static const String playerScreen = "/player-screen";
-  static const String playerDetail = "/player-detail"; 
+  static String createUpdateTeam = "/create-team";  
+  static String teamDetail = "/team-detail"; 
+  static String teamScreen = "/team-screen";
+
+  static String createUpdatePlayer = "/create-player";
+  static String playerScreen = "/player-screen";
+  static String playerDetail = "/player-detail"; 
 
   static String registerScreen = "/register";
   static String loginScreen = "/login";
@@ -31,7 +35,7 @@ final routesConfig = GoRouter(
   routes: [
     GoRoute(
       path: AppRoutes.home,
-      builder: (context, state) => HomeScreen(),
+      builder: (context, state) => const HomeScreen(),
     ),
     GoRoute(
       path: AppRoutes.tournamentsScreen,
@@ -62,35 +66,35 @@ final routesConfig = GoRouter(
       builder: (context, state) => const TeamScreen(),
     ),
     GoRoute(
-      path: AppRoutes.categoryDetail,
-      builder: (context, state) => CategoryDetailScreen( categoryId: '${state.uri.queryParameters["category_id"]}'),
-    ),
-    GoRoute(
-      path: AppRoutes.createUpdateCategory,
-      builder: (context, state) => CreateCategoryScreen( categoryId: state.uri.queryParameters["category_id"]),
-    ),
-    GoRoute(
-      path: AppRoutes.createTeam,
-      builder: (context, state) => const CreateTeamScreen(),
-    ),
-    GoRoute(
-      path: AppRoutes.teamScreen,
-      builder: (context, state) => const TeamScreen(),
-    ),
-    GoRoute(
       path: AppRoutes.teamDetail,
-      builder: (context, state) => TeamDetailScreen(
-        teamId: '${state.uri.queryParameters["team_id"]}',
+      builder: (context, state) => TeamDetailScreen( teamId: '${state.uri.queryParameters["team_id"]}'),
+    ),
+    GoRoute(
+      path: AppRoutes.createUpdateTeam,
+      builder: (context, state) => CreateTeamScreen( teamId: state.uri.queryParameters["team_id"]),
+    ),
+    GoRoute(
+      path: AppRoutes.createUpdatePlayer,
+      builder: (context, state) => const CreatePlayerScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.tournamentUserScreen,
+      builder: (context, state) => const TournamentUserScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.playerScreen,
+      builder: (context, state) => PlayerScreen(
+        playerId: '${state.uri.queryParameters["player_id"]}',
       ),
     ),
 
     GoRoute(
       path: AppRoutes.registerScreen,
-      builder: (context, state) => RegisterScreen(),
+      builder: (context, state) => const RegisterScreen(),
     ),
     GoRoute(
       path: AppRoutes.loginScreen,
-      builder: (context, state) => LoginScreen(),
+      builder: (context, state) => const LoginScreen(),
     ),
 //     GoRoute(
 //       path: AppRoutes.createUpdate,

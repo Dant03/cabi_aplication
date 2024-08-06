@@ -8,15 +8,19 @@ import '/models/player.dart';
 import '/widgets/custom_input_text.dart';
 import 'package:cabi_app/widgets/drawer_widgets.dart';
 
+// Define un StateProvider para almacenar el número del jugador
+final playerNumberProvider = StateProvider<int>((ref) => 0);
+
 class CreatePlayerScreen extends ConsumerWidget {
   final String? playerId;
   const CreatePlayerScreen({super.key, this.playerId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Controladores de texto
     final TextEditingController firstNameCtrl = TextEditingController();
     final TextEditingController lastNameCtrl = TextEditingController();
-    final TextEditingController playerNumberCtrl = TextEditingController();
+    final TextEditingController cedulaCtrl = TextEditingController();
     final TextEditingController phoneCtrl = TextEditingController();
     final TextEditingController emailCtrl = TextEditingController();
     final TextEditingController genderCtrl = TextEditingController();
@@ -24,8 +28,23 @@ class CreatePlayerScreen extends ConsumerWidget {
     final TextEditingController statusCtrl = TextEditingController();
 
     final playerIdProv = playerId == null
-        ? ref.watch(playerEmptyProvider)
-        : ref.watch(playerByIdProvider(playerId!));
+        ? playerEmptyProvider
+        : playerByIdProvider(playerId!);
+
+    final AsyncValue<Player> player = ref.watch(playerIdProv);
+    final int playerNumber = ref.watch(playerNumberProvider);
+
+    Future<void> _selectDate(BuildContext context) async {
+      final DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1900),
+        lastDate: DateTime.now(),
+      );
+      if (pickedDate != null) {
+        birthdateCtrl.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -42,18 +61,18 @@ class CreatePlayerScreen extends ConsumerWidget {
               Form(
                 child: Column(
                   children: [
-                    playerIdProv.when(
-                      data: (player) {
+                    player.when(
+                      data: (playerData) {
                         if (playerId != null) {
-                          // Update inputs controllers
-                          firstNameCtrl.text = player.firstName;
-                          lastNameCtrl.text = player.lastName;
-                          playerNumberCtrl.text = player.playerNumber.toString();
-                          phoneCtrl.text = player.phone;
-                          emailCtrl.text = player.email;
-                          genderCtrl.text = player.gender;
-                          birthdateCtrl.text = DateFormat('yyyy-MM-dd').format(player.birthdate);
-                          statusCtrl.text = player.status;
+                          firstNameCtrl.text = playerData.firstName!;
+                          lastNameCtrl.text = playerData.lastName!;
+                          cedulaCtrl.text = playerData.cedula!;
+                          phoneCtrl.text = playerData.phone!;
+                          emailCtrl.text = playerData.email!;
+                          genderCtrl.text = playerData.gender!;
+                          birthdateCtrl.text = DateFormat('yyyy-MM-dd').format(playerData.birthdate!);
+                          // statusCtrl.text = playerData.status!;
+                          ref.read(playerNumberProvider.notifier).state = playerData.playerNumber as int;
                         }
                         return Column(
                           children: [
@@ -69,12 +88,53 @@ class CreatePlayerScreen extends ConsumerWidget {
                               hintText: 'Indique el apellido',
                               controller: lastNameCtrl,
                             ),
-                            const Text("Número de Jugador"),
+                            const Text("Cedula"),
                             CustomInputText(
-                              label: 'Número de Jugador',
-                              hintText: 'Número del jugador',
-                              controller: playerNumberCtrl,
-                              keyboardType: TextInputType.number,
+                              label: 'Cedula',
+                              hintText: 'Ingrese cedula del jugador',
+                              controller: cedulaCtrl,
+                            ),
+                            const Text("Número de Jugador"),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.remove),
+                                  onPressed: () {
+                                    ref.read(playerNumberProvider.notifier).state =
+                                        (playerNumber > 0) ? playerNumber - 1 : 99;
+                                  },
+                                ),
+                                Text(
+                                  playerNumber.toString().padLeft(2, '0'),
+                                  style: const TextStyle(fontSize: 24),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.add),
+                                  onPressed: () {
+                                    ref.read(playerNumberProvider.notifier).state =
+                                        (playerNumber < 99) ? playerNumber + 1 : 0;
+                                  },
+                                ),
+                                const SizedBox(width: 20),
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Image.asset(
+                                      'assets/dorsal_jersey.png', // Ruta de la imagen de la camiseta
+                                      height: 100,
+                                    ),
+                                    Text(
+                                      playerNumber.toString().padLeft(2, '0'),
+                                      style: const TextStyle(
+                                        fontSize: 32,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                             const Text("Teléfono"),
                             CustomInputText(
@@ -97,18 +157,17 @@ class CreatePlayerScreen extends ConsumerWidget {
                               controller: genderCtrl,
                             ),
                             const Text("Fecha de Nacimiento"),
-                            CustomInputText(
-                              label: 'Fecha de Nacimiento',
-                              hintText: 'Fecha de nacimiento',
-                              controller: birthdateCtrl,
-                              keyboardType: TextInputType.datetime,
+                            GestureDetector(
+                              onTap: () => _selectDate(context),
+                              child: AbsorbPointer(
+                                child: CustomInputText(
+                                  label: 'Fecha de Nacimiento',
+                                  hintText: 'Seleccione la fecha de nacimiento',
+                                  controller: birthdateCtrl,
+                                ),
+                              ),
                             ),
-                            const Text("Estado"),
-                            CustomInputText(
-                              label: 'Estado',
-                              hintText: 'Estado del jugador',
-                              controller: statusCtrl,
-                            ),
+                            
                           ],
                         );
                       },
@@ -120,23 +179,22 @@ class CreatePlayerScreen extends ConsumerWidget {
                       loading: () => const CircularProgressIndicator(),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                       child: ElevatedButton(
                         style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.blue),
+                          backgroundColor: MaterialStateProperty.all(Colors.blue),
                         ),
                         onPressed: () async {
                           final Player playerSubmit = Player(
                             firstName: firstNameCtrl.text,
                             lastName: lastNameCtrl.text,
-                            playerNumber: int.tryParse(playerNumberCtrl.text) ?? 0,
+                            cedula: cedulaCtrl.text,
+                            playerNumber: playerNumber.toString(),
                             phone: phoneCtrl.text,
                             email: emailCtrl.text,
                             gender: genderCtrl.text,
                             birthdate: DateFormat('yyyy-MM-dd').parse(birthdateCtrl.text),
-                            status: statusCtrl.text,
+                            // status: statusCtrl.text,
                           );
                           print(playerSubmit.toJson());
                           if (playerId == null) {
@@ -146,9 +204,6 @@ class CreatePlayerScreen extends ConsumerWidget {
                             // Actualizar
                             ref.read(updatePlayerProvider(playerSubmit).future);
                           }
-
-                          //context.push(AppRoutes.playerScreen);
-                          //ref.invalidate(getPlayersProvider);
                         },
                         child: Text(
                           playerId == null ? 'Crear' : 'Actualizar',

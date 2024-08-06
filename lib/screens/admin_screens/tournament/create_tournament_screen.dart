@@ -364,47 +364,122 @@
 //   'Domingo': 'Domingo',
 // };
 
+import 'dart:convert';
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:intl/intl.dart';
 import '/providers/tournament_provider.dart';
 import '/routes/app_routes.dart';
 import '/models/tournament.dart';
 import '/widgets/custom_input_text.dart';
 import 'package:cabi_app/widgets/drawer_widgets.dart';
 
-class CreateTournamentScreen extends ConsumerWidget {
+class CreateTournamentScreen extends ConsumerStatefulWidget {
   final String? tournamentId;
   const CreateTournamentScreen({super.key, this.tournamentId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final TextEditingController nameCtrl = TextEditingController();
-    final TextEditingController urlImageCtrl = TextEditingController();
-    final TextEditingController locationCtrl = TextEditingController();
-    final TextEditingController numCourtsCtrl = TextEditingController();
-    final TextEditingController registrationDateCtrl = TextEditingController();
-    final TextEditingController startDateCtrl = TextEditingController();
-    final TextEditingController gameDaysCtrl = TextEditingController();
-    final TextEditingController registrationValueCtrl = TextEditingController();
-    final TextEditingController warrantyValueCtrl = TextEditingController();
-    final TextEditingController matchValueCtrl = TextEditingController();
-    final TextEditingController rulesCtrl = TextEditingController();
-    final TextEditingController phoneCtrl = TextEditingController();
-    final TextEditingController emailCtrl = TextEditingController();
-    final TextEditingController statusCtrl = TextEditingController();
-    final TextEditingController categoriesCtrl = TextEditingController();
+  _CreateTournamentScreenState createState() => _CreateTournamentScreenState();
+}
 
-    final tournamentIdProv = tournamentId == null
+class _CreateTournamentScreenState extends ConsumerState<CreateTournamentScreen> {
+  final TextEditingController nameCtrl = TextEditingController();
+  final TextEditingController locationCtrl = TextEditingController();
+  final TextEditingController numCourtsCtrl = TextEditingController();
+  final TextEditingController registrationDateCtrl = TextEditingController();
+  final TextEditingController startDateCtrl = TextEditingController();
+  final TextEditingController gameDaysCtrl = TextEditingController();
+  final TextEditingController registrationValueCtrl = TextEditingController();
+  final TextEditingController warrantyValueCtrl = TextEditingController();
+  final TextEditingController matchValueCtrl = TextEditingController();
+  final TextEditingController rulesCtrl = TextEditingController();
+  final TextEditingController phoneCtrl = TextEditingController();
+  final TextEditingController emailCtrl = TextEditingController();
+  final TextEditingController statusCtrl = TextEditingController();
+  final TextEditingController categoriesCtrl = TextEditingController();
+
+  File? _imageFile;
+  DateTime? _selectedRegistrationDate;
+  DateTime? _selectedStartDate;
+
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _imageFile = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  Future<String?> _uploadImageToCloudinary(File imageFile) async {
+  try {
+    final dio = Dio();
+    final cloudName = dotenv.env['CLOUDINARY_CLOUD_NAME'];
+    final uploadPreset = dotenv.env['CLOUDINARY_UPLOAD_PRESET'];
+    
+
+    if (cloudName == null || uploadPreset == null) {
+      throw Exception('Cloudinary environment variables not set');
+    }
+    final sanitizedTournamentName = nameCtrl.text.replaceAll(RegExp(r'[^\w\s-]'), '').replaceAll(' ', '_').toLowerCase();
+
+    final formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(imageFile.path),
+      'upload_preset': uploadPreset,
+      'public_id': '$sanitizedTournamentName.png',
+    });
+
+    final response = await dio.post(
+      'https://api.cloudinary.com/v1_1/$cloudName/image/upload',
+      data: formData,
+    );
+
+    if (response.statusCode == 200) {
+      return response.data['secure_url'];
+    } else {
+      print('Failed to upload image: ${response.statusMessage}');
+      return null;
+    }
+  } catch (e) {
+    print('Exception caught: $e');
+    return null;
+  }
+}
+
+  Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (picked != null) {
+      setState(() {
+        controller.text = DateFormat('yyyy-MM-dd').format(picked);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final tournamentIdProv = widget.tournamentId == null
         ? ref.watch(tournamentEmptyProvider)
-        : ref.watch(tournamentByIdProvider(tournamentId!));
-        // : ref.watch(createTournamentProvider(tournament!));
-
-
+        : ref.watch(tournamentByIdProvider(widget.tournamentId!));
 
     return Scaffold(
       appBar: AppBar(
-        title: tournamentId == null
+        title: widget.tournamentId == null
             ? const Text("Crear Torneo")
             : const Text("Actualizar Torneo"),
       ),
@@ -419,10 +494,9 @@ class CreateTournamentScreen extends ConsumerWidget {
                   children: [
                     tournamentIdProv.when(
                       data: (tournament) {
-                        if (tournamentId != null) {
+                        if (widget.tournamentId != null) {
                           // Update inputs controllers
                           nameCtrl.text = tournament.name ?? '';
-                          urlImageCtrl.text = tournament.image ?? '';
                           locationCtrl.text = tournament.location ?? '';
                           numCourtsCtrl.text = tournament.numCourts.toString();
                           registrationDateCtrl.text =
@@ -440,7 +514,6 @@ class CreateTournamentScreen extends ConsumerWidget {
                           rulesCtrl.text = tournament.rules ?? '';
                           phoneCtrl.text = tournament.phone ?? '';
                           emailCtrl.text = tournament.email ?? '';
-                          // statusCtrl.text = tournament.status ?? '';
                           statusCtrl.text = tournament.status ?? '';
                           categoriesCtrl.text = tournament.categories == null
                               ? ''
@@ -455,10 +528,20 @@ class CreateTournamentScreen extends ConsumerWidget {
                               controller: nameCtrl,
                             ),
                             const Text("Imagen"),
-                            CustomInputText(
-                              label: 'Imagen',
-                              hintText: 'URL de la imagen',
-                              controller: urlImageCtrl,
+                            _imageFile != null
+                                ? Image.file(_imageFile!)
+                                : Container(
+                                    height: 150,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                    ),
+                                    child: Center(
+                                      child: Text('No image selected'),
+                                    ),
+                                  ),
+                            ElevatedButton(
+                              onPressed: _pickImage,
+                              child: const Text('Select Image'),
                             ),
                             const Text("Ubicación"),
                             CustomInputText(
@@ -473,16 +556,36 @@ class CreateTournamentScreen extends ConsumerWidget {
                               controller: numCourtsCtrl,
                               keyboardType: TextInputType.number,
                             ),
+                            const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustomInputText(
+                            label: 'Fecha de Registro',
+                            hintText: 'Fecha de registro',
+                            controller: registrationDateCtrl,                
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: CustomInputText(
+                            label: 'Fecha de Inicio',
+                            hintText: 'Fecha de inicio',
+                            controller: startDateCtrl,                       
+                          ),
+                        ),
+                      ],
+                    ),
                             const Text("Fecha de Registro"),
                             CustomInputText(
                               label: 'Fecha de Registro',
-                              hintText: 'Fecha de registro',
+                              hintText: 'YYYY-MM-DD',
                               controller: registrationDateCtrl,
                             ),
                             const Text("Fecha de Inicio"),
                             CustomInputText(
                               label: 'Fecha de Inicio',
-                              hintText: 'Fecha de inicio',
+                              hintText: 'YYYY-MM-DD',
                               controller: startDateCtrl,
                             ),
                             const Text("Días de Juego"),
@@ -532,7 +635,6 @@ class CreateTournamentScreen extends ConsumerWidget {
                               controller: emailCtrl,
                               keyboardType: TextInputType.emailAddress,
                             ),
-                            
                             const Text("Categorías"),
                             CustomInputText(
                               label: 'Categorías',
@@ -558,12 +660,18 @@ class CreateTournamentScreen extends ConsumerWidget {
                               MaterialStateProperty.all(Colors.blue),
                         ),
                         onPressed: () async {
+                          // Sube la imagen a Cloudinary antes de enviar el formulario
+                          String? imageUrl;
+                          if (_imageFile != null) {
+                            imageUrl = await _uploadImageToCloudinary(_imageFile!);
+                          }
+
                           final Tournament tournamentSubmit = Tournament(
-                            tournamentId: tournamentId == null
+                            tournamentId: widget.tournamentId == null
                                 ? 0
-                                : int.parse(tournamentId!),
+                                : int.parse(widget.tournamentId!),
                             name: nameCtrl.text,
-                            image: urlImageCtrl.text,
+                            image: imageUrl ?? '',
                             location: locationCtrl.text,
                             numCourts: int.tryParse(numCourtsCtrl.text) ?? 0,
                             registrationDate: registrationDateCtrl.text,
@@ -580,14 +688,14 @@ class CreateTournamentScreen extends ConsumerWidget {
                             rules: rulesCtrl.text,
                             phone: phoneCtrl.text,
                             email: emailCtrl.text,
-                            // status: 'active',
                             categories: categoriesCtrl.text
                                 .split(',')
                                 .map((e) => e.trim())
                                 .toList(),
                           );
+
                           print(tournamentSubmit.toJson());
-                          if (tournamentId == null) {
+                          if (widget.tournamentId == null) {
                             // Crear
                             ref.read(
                                 createTournamentProvider(tournamentSubmit));
@@ -597,11 +705,11 @@ class CreateTournamentScreen extends ConsumerWidget {
                                 updateTournamentProvider(tournamentSubmit));
                           }
 
-                          //context.push(AppRoutes.tournamentsScreen);
-                          //ref.invalidate(getTournamentsProvider);
+                          context.push(AppRoutes.tournamentsScreen);
+                          ref.invalidate(getTournamentsProvider);
                         },
                         child: Text(
-                          tournamentId == null ? 'Crear' : 'Actualizar',
+                          widget.tournamentId == null ? 'Crear' : 'Actualizar',
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
