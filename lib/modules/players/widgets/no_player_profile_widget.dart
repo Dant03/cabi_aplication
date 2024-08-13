@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:movil_cabi_app/modules/auth/provider/auth_provider.dart';
+import 'package:movil_cabi_app/modules/players/models/player_model.dart';
+import 'package:movil_cabi_app/modules/players/providers/player_provider.dart';
+import 'package:movil_cabi_app/modules/players/widgets/birdthday_picker_widget.dart';
 
 class NoPlayerProfileWidget extends ConsumerWidget {
   const NoPlayerProfileWidget({
@@ -9,12 +13,12 @@ class NoPlayerProfileWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    
-
     final dniCtrl = TextEditingController();
     final phoneCtrl = TextEditingController();
     final genderCtrl = TextEditingController();
     final birthDayCtrl = TextEditingController();
+
+    final userId = ref.watch(AuthProvider.userAuth)?.userId;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -60,25 +64,38 @@ class NoPlayerProfileWidget extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 15),
+                        BirdthdayPickerWidget(birdthdayCtrl: birthDayCtrl),
+                        const SizedBox(height: 15),
                         TextField(
                           controller: genderCtrl,
                           decoration: const InputDecoration(
                             labelText: 'Género',
                             border: OutlineInputBorder(),
                           ),
-                          keyboardType: TextInputType.number,
-                        ),
-                        const SizedBox(height: 15),
-                        TextField(
-                          controller: birthDayCtrl,
-                          decoration: const InputDecoration(
-                            labelText: 'Fecha Nacimiento',
-                            border: OutlineInputBorder(),
-                          ),
+                          keyboardType: TextInputType.text,
                         ),
                         const SizedBox(height: 30),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            print("boton presionado");
+                            final dateSplit = birthDayCtrl.text.split('-');
+                            print(dateSplit);
+                            final playerSubmit = PlayerModel(
+                              userId: userId,
+                              playerDni: dniCtrl.text,
+                              playerPhone: phoneCtrl.text,
+                              playerGender: genderCtrl.text,
+                              playerBirthdate: DateTime.utc(
+                                int.parse(dateSplit[0]),
+                                int.parse(dateSplit[1]),
+                                int.parse(dateSplit[2]),
+                              ),
+                            );
+                            print(playerSubmit.toJson());
+                            ref.read(
+                              PlayerProvider.postPlayerProfile(playerSubmit),
+                            );
+                          },
                           child: const Text('Crear perfil de jugador'),
                         ),
                       ],

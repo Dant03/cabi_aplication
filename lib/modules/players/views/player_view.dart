@@ -20,46 +20,55 @@ class PlayerView extends ConsumerWidget {
         title: const Text('Perfil de jugador'),
       ),
       drawer: DrawerWidget(),
-      body: playerProd.when(
-        data: (profile) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Text('Cedula de Identidad: ${profile.playerDni}'),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Text('Teléfono/celular: ${profile.playerPhone}'),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Text('Género: ${profile.playerGender}'),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Text(
-                    'Fecha de nacimiento: ${profile.playerBirthdate.toString().split(' ')[0]}'),
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: OutlinedButton(
-                    onPressed: () {},
-                    child: const Text('Actualizar'),
-                  ),
-                ),
-              )
-            ],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          ref.invalidate(
+            PlayerProvider.getPlayerProfileByUserId(userProv?.userId),
           );
         },
-        error: (obj, str) => const Center(
-          child: NoPlayerProfileWidget(),
-        ),
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
+        child: SingleChildScrollView(
+          child: playerProd.when(
+            data: (profile) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text('Cedula de Identidad: ${profile.playerDni}'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text('Teléfono/celular: ${profile.playerPhone}'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text('Género: ${profile.playerGender}'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                        'Fecha de nacimiento: ${profile.playerBirthdate.toString().split(' ')[0]}'),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: OutlinedButton(
+                        onPressed: () {},
+                        child: const Text('Actualizar'),
+                      ),
+                    ),
+                  )
+                ],
+              );
+            },
+            error: (obj, str) => const Center(
+              child: NoPlayerProfileWidget(),
+            ),
+            loading: () => const Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
         ),
       ),
     );

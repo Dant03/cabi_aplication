@@ -16,9 +16,9 @@ class GameCardWidget extends StatelessWidget {
           width: double.infinity,
           child: Column(
             children: [
-              Text('Partidos'),
-              Text('Torneo'),
-              Text('Categoria'),
+              const Text('Partidos'),
+              const Text('Torneo'),
+              const Text('Categoria'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -36,8 +36,8 @@ class GameCardWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              Text('Fecha'),
-              Text('Ubicación'),
+              const Text('Fecha'),
+              const Text('Ubicación'),
             ],
           ),
         ),
