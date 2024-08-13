@@ -26,4 +26,6 @@ class TeamsProvider {
       return TeamModel();
     }
   });
+
+  // static final getTeamsByUserId = FutureProvider.autoDispose.family<>();
 }

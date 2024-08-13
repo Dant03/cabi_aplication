@@ -11,10 +11,15 @@ class TeamsOwnedView extends StatelessWidget {
         title: const Text('Equipos del usuario'),
       ),
       drawer: DrawerWidget(),
-      body: const Column(
-        children: [
-          Text('Equipos del usuario')
-        ],
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {},
+        label: const Text('Crear Equipo'),
+      ),
+      body: const Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [Text('Equipos del usuario')],
+        ),
       ),
     );
   }

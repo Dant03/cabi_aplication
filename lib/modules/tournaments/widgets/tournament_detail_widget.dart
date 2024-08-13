@@ -10,9 +10,8 @@ class TournamentDetailWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     return Card(
+    return Card(
       color: Colors.white24,
-      
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
@@ -20,7 +19,8 @@ class TournamentDetailWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GestureDetector(
-          onTap: () => Get.toNamed(AppRoutes.tournamentById, arguments: tournament.tournamentId),
+          onTap: () => Get.toNamed(AppRoutes.tournamentById,
+              arguments: tournament.tournamentId),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -31,6 +31,8 @@ class TournamentDetailWidget extends StatelessWidget {
                   height: 150,
                   width: double.infinity,
                   fit: BoxFit.cover,
+                  errorBuilder: (c, e, s) =>
+                      Image.asset('assets/img/bg-no-photo-nbg.jpg'),
                 ),
               ),
               const SizedBox(height: 10),
