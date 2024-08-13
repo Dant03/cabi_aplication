@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:movil_cabi_app/modules/teams/widgets/create_team_bottom_sheet.dart';
 import 'package:movil_cabi_app/shared/widgets/drawer_widget.dart';
 
 class TeamsOwnedView extends StatelessWidget {
@@ -12,7 +14,9 @@ class TeamsOwnedView extends StatelessWidget {
       ),
       drawer: DrawerWidget(),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          Get.bottomSheet(const CreateTeamBottomSheet());
+        },
         label: const Text('Crear Equipo'),
       ),
       body: const Center(
