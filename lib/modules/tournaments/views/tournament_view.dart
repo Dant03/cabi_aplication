@@ -24,10 +24,15 @@ class TournamentView extends ConsumerWidget {
                   .map((t) => TournamentDetailWidget(tournament: t))
                   .toList()),
         ),
-        error: (obj, stc) => Center(
+        error: (obj, stc) => const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text(obj.toString()), Text(stc.toString())],
+            children: [
+              Text(
+                'No existen torneos por el momento',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              )
+            ],
           ),
         ),
         loading: () => const Center(

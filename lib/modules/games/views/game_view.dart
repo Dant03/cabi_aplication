@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/game_card_widget.dart';
+
 class GameView extends StatelessWidget {
   const GameView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      appBar: AppBar(
+        title: const Text('Todos los partidos'),
+      ),
+      body: const SingleChildScrollView(
         child: Column(
           children: [
-            const Text('Game View'),
-            IconButton.outlined(
-              onPressed: () {},
-              icon: const Icon(Icons.sd),
-            )
+            // Text('No hay partidos por el momento'),
+
+            // hacer el get de toodos los partidos con join, intentar hacer con categoria
+            GameCardWidget(),
+            GameCardWidget(),
+            GameCardWidget(),
+            GameCardWidget(),
           ],
         ),
       ),

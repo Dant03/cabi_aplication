@@ -15,6 +15,7 @@ import 'package:dio/dio.dart';
 
 final dio = Dio(BaseOptions(
   // baseUrl: 'http://192.168.1.37:3000/api/v1',
-  baseUrl: 'http://192.168.3.48:3000/api/v1', /* Equipo de jdtorres1 en @laguarida */
+  // baseUrl: 'http://192.168.3.48:3000/api/v1', /* Equipo de jdtorres1 en @laguarida */
+  baseUrl: 'http://172.16.130.31:3000/api/v1', /* pucesi */
   validateStatus: (status) =>  status! < 500,
 ));

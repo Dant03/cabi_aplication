@@ -7,12 +7,13 @@ class TournamentProvider {
       FutureProvider.autoDispose<List<TournamentModel>>((ref) async {
     try {
       final response = await dio.get('/tournaments');
-      if (response.statusCode != 200) return [];
+      if (response.statusCode != 200 ||
+          (response.data as List<dynamic>).isEmpty) throw Exception();
       return (response.data as List<dynamic>)
           .map((t) => TournamentModel.fromJson(t))
           .toList();
     } catch (e) {
-      return [];
+      throw Exception();
     }
   });
 
@@ -26,5 +27,5 @@ class TournamentProvider {
       return TournamentModel();
     }
   });
-  // 
+  //
 }

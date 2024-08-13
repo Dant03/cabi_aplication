@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:movil_cabi_app/config/dio_config.dart';
@@ -25,7 +26,11 @@ class AuthProvider {
 
       if (response.statusCode != 200) {
         ref.read(isAuthenticated.notifier).update((s) => s = false);
-        Get.snackbar('Error en autenticación', '${response.data}');
+        Get.snackbar(
+          'Error en autenticación',
+          '${response.data["message"]}',
+          colorText: Colors.redAccent,
+        );
         return;
       }
 
@@ -52,11 +57,11 @@ class AuthProvider {
       });
 
       if (response.statusCode == 201) {
+        Get.snackbar('Muy bien', 'Usuario creado con éxito');
         ref.read(userCreated.notifier).update((s) => s = response.data);
         Get.toNamed(AppRoutes.login);
-        Get.snackbar('Muy bien', 'Usuario creado con éxito');
       } else {
-        Get.snackbar('No se pudo crear usuario', '${response.data}');
+        Get.snackbar('No se pudo crear usuario', '${response.data["message"]}');
       }
 
       ref.read(isAuthenticated.notifier).update((s) => s = true);

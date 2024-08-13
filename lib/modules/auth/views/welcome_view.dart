@@ -39,44 +39,43 @@ class WelcomeView extends ConsumerWidget {
                     const Column(
                       children: [
                         Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            'Te damos la bienvenida',
-                            style: TextStyle(
-                              color: Colors.orange,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Te damos la bienvenida',
+                                style: TextStyle(
+                                  color: Colors.orange,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                'a CABI',
+                                style: TextStyle(
+                                  color: Colors.orange,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            'a CABI',
-                            style: TextStyle(
-                              color: Colors.orange,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        ),
+                        SizedBox(height: 20),
+                        Image(
+                          filterQuality: FilterQuality.medium,
+                          height: 200,
+                          image: AssetImage('assets/img/logo-aabi-nb.png'),
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          'Torneos del momento',
+                          style: TextStyle(
+                            color: Colors.orange,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Image(
-                      filterQuality: FilterQuality.medium,
-                      height: 200,
-                      image: AssetImage('assets/img/logo-aabi-nb.png'),
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      'Torneos del momento',
-                      style: TextStyle(
-                        color: Colors.orange,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    
+                        ),
+                        SizedBox(height: 20),
                       ],
                     ),
                     tournamentsProv.when(
@@ -84,12 +83,15 @@ class WelcomeView extends ConsumerWidget {
                           children: ts
                               .map((t) => TournamentDetailWidget(tournament: t))
                               .toList()),
-                      error: (obj, stc) => Center(
+                      error: (obj, stc) => const Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(obj.toString()),
-                            Text(stc.toString())
+                            Text(
+                              'No existen torneos por el momento',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
+                            )
                           ],
                         ),
                       ),

@@ -33,7 +33,7 @@ class TournamentByIdView extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 FadeInImage(
-                  placeholder: const AssetImage('loading_1.gif'),
+                  placeholder: const AssetImage('assets/gifs/loading_1.gif'),
                   image: NetworkImage(tournament.tournamentImageUrl ?? ''),
                   imageErrorBuilder: (c, o, s) =>
                       Image.asset('assets/img/bg-no-photo.jpg'),
