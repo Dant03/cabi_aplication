@@ -14,9 +14,9 @@ class TournamentButtonAppBar extends StatelessWidget {
             children: [
               IconButton.outlined(
                 onPressed: () {},
-                icon: Icon(Icons.military_tech),
+                icon: const Icon(Icons.military_tech),
               ),
-              Text(
+              const Text(
                 'Torneos en juego',
                 style: TextStyle(fontSize: 10),
               )
@@ -26,9 +26,9 @@ class TournamentButtonAppBar extends StatelessWidget {
             children: [
               IconButton.outlined(
                 onPressed: () {},
-                icon: Icon(Icons.history_edu_outlined),
+                icon: const Icon(Icons.history_edu_outlined),
               ),
-              Text(
+              const Text(
                 'Todos los torneos',
                 style: TextStyle(fontSize: 10),
               )

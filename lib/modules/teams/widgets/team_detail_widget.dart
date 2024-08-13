@@ -1,33 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movil_cabi_app/modules/teams/providers/teams_provider.dart';
 
-import 'package:movil_cabi_app/modules/tournaments/models/tournament_model.dart';
-import 'package:movil_cabi_app/routes/app_routes.dart';
-
-class TournamentDetailWidget extends StatelessWidget {
-  final TournamentModel tournament;
-  const TournamentDetailWidget({super.key, required this.tournament});
+class TeamDetailWidget extends ConsumerWidget {
+  final int id;
+  const TeamDetailWidget(this.id, {super.key});
 
   @override
-  Widget build(BuildContext context) {
-     return Card(
-      color: Colors.white24,
-      
+  Widget build(BuildContext context, WidgetRef ref) {
+    // final id = int.parse(Get.arguments());
+    final teamByIdProv = ref.watch(TeamsProvider.getTeamByIdProvider(id));
+    return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
       elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: GestureDetector(
-          onTap: () => Get.toNamed(AppRoutes.tournamentById, arguments: tournament.tournamentId),
+      child: teamByIdProv.when(
+        data: (team) => Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
                 child: Image.network(
-                  tournament.tournamentImageUrl!,
+                  team.teamLogo!,
                   height: 150,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -35,7 +32,7 @@ class TournamentDetailWidget extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                tournament.tournamentName ?? 'sin-nombre',
+                team.teamName ?? 'sin-nombre',
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -43,22 +40,28 @@ class TournamentDetailWidget extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                tournament.tournamentLocation ?? 'sin-locacion',
+                'Teléfono: ${team.teamPhone}',
                 style: const TextStyle(
                   fontSize: 16,
-                  color: Colors.black54,
+                  color: Colors.grey,
                 ),
               ),
               const SizedBox(height: 5),
               Text(
-                tournament.tournamentStartDate!.toLocal().toString(),
+                'Email: ${team.teamEmail}',
                 style: const TextStyle(
                   fontSize: 16,
-                  color: Colors.black45,
+                  color: Colors.grey,
                 ),
               ),
             ],
           ),
+        ),
+        error: (obj, str) => Center(
+          child: Text('${obj.toString()}:::${str.toString()}'),
+        ),
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
         ),
       ),
     );
