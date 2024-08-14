@@ -57,9 +57,10 @@ class AuthProvider {
       });
 
       if (response.statusCode == 201) {
-        Get.snackbar('Muy bien', 'Usuario creado con éxito');
+        Get.snackbar('Muy bien', 'Usuario creado con éxito, ahora ya puede iniciar sesión');
+        Get.offAllNamed(AppRoutes.login);
         ref.read(userCreated.notifier).update((s) => s = response.data);
-        Get.toNamed(AppRoutes.login);
+        ref.read(userAuth.notifier).update((s) => s = response.data);
       } else {
         Get.snackbar('No se pudo crear usuario', '${response.data["message"]}');
       }

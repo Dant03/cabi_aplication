@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import 'package:movil_cabi_app/modules/tournaments/models/tournament_model.dart';
 import 'package:movil_cabi_app/routes/app_routes.dart';
+import 'package:movil_cabi_app/shared/widgets/network_img_widget.dart';
 
 class TournamentDetailWidget extends StatelessWidget {
   final TournamentModel tournament;
@@ -26,14 +27,7 @@ class TournamentDetailWidget extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
-                child: Image.network(
-                  tournament.tournamentImageUrl!,
-                  height: 150,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (c, e, s) =>
-                      Image.asset('assets/img/bg-no-photo-nbg.jpg'),
-                ),
+                child: NetworkImgWidget(urlImg: tournament.tournamentImageUrl),
               ),
               const SizedBox(height: 10),
               Text(
@@ -45,7 +39,7 @@ class TournamentDetailWidget extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                tournament.tournamentLocation ?? 'sin-locacion',
+                'Ubicación: ${tournament.tournamentLocation}',
                 style: const TextStyle(
                   fontSize: 16,
                   color: Colors.black54,
@@ -53,7 +47,7 @@ class TournamentDetailWidget extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                tournament.tournamentStartDate!.toLocal().toString(),
+                'Fecha de inicio: ${tournament.tournamentStartDate!.toLocal().toString().split(' ')[0]}',
                 style: const TextStyle(
                   fontSize: 16,
                   color: Colors.black45,

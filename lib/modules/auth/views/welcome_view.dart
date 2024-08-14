@@ -36,47 +36,50 @@ class WelcomeView extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    const Column(
-                      children: [
-                        Center(
-                          child: Column(
-                            children: [
-                              Text(
-                                'Te damos la bienvenida',
-                                style: TextStyle(
-                                  color: Colors.orange,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
+                    Container(
+                      constraints: const BoxConstraints(maxWidth: 500),
+                      child: const Column(
+                        children: [
+                          Center(
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Te damos la bienvenida',
+                                  style: TextStyle(
+                                    color: Colors.orange,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                'a CABI',
-                                style: TextStyle(
-                                  color: Colors.orange,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
+                                Text(
+                                  'a CABI',
+                                  style: TextStyle(
+                                    color: Colors.orange,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 20),
-                        Image(
-                          filterQuality: FilterQuality.medium,
-                          height: 200,
-                          image: AssetImage('assets/img/logo-aabi-nb.png'),
-                        ),
-                        SizedBox(height: 20),
-                        Text(
-                          'Torneos del momento',
-                          style: TextStyle(
-                            color: Colors.orange,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                          SizedBox(height: 20),
+                          Image(
+                            filterQuality: FilterQuality.medium,
+                            height: 200,
+                            image: AssetImage('assets/img/logo-aabi-nb.png'),
                           ),
-                        ),
-                        SizedBox(height: 20),
-                      ],
+                          SizedBox(height: 20),
+                          Text(
+                            'Torneos del momento',
+                            style: TextStyle(
+                              color: Colors.orange,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                        ],
+                      ),
                     ),
                     tournamentsProv.when(
                       data: (ts) => Column(

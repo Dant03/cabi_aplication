@@ -18,7 +18,8 @@ class RegisterView extends ConsumerWidget {
     final passRepCtrl = TextEditingController();
     return Scaffold(
       body: Center(
-        child: Padding(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 500),
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SafeArea(
             child: SingleChildScrollView(

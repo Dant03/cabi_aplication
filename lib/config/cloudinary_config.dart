@@ -21,8 +21,10 @@ class CloudinaryConfigState extends State<CloudinaryConfig> {
 
     if (pickedFile != null) {
       final File imageFile = File(pickedFile.path);
-      const String cloudinaryUrl = 'https://api.cloudinary.com/v1_1/dpoosdwgu/image/upload';
-      const String uploadPreset = 'system_uploader_1e2ddab171f769b9_c872b1db33094e851af414d8c0526278b7';
+      const String cloudinaryUrl =
+          'https://api.cloudinary.com/v1_1/dpoosdwgu/image/upload';
+      const String uploadPreset =
+          'system_uploader_1e2ddab171f769b9_c872b1db33094e851af414d8c0526278b7';
 
       FormData formData = FormData.fromMap({
         'file': await MultipartFile.fromFile(imageFile.path),
@@ -46,8 +48,6 @@ class CloudinaryConfigState extends State<CloudinaryConfig> {
     }
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -62,7 +62,6 @@ class CloudinaryConfigState extends State<CloudinaryConfig> {
           _imageUrl != null
               ? Image.network(_imageUrl!)
               : const Text('Sin imagen'),
-          
         ],
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:movil_cabi_app/modules/teams/providers/teams_provider.dart';
 
 class TeamDetailWidget extends ConsumerWidget {
@@ -8,7 +9,7 @@ class TeamDetailWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final id = int.parse(Get.arguments());
+    final id = int.parse(Get.arguments());
     final teamByIdProv = ref.watch(TeamsProvider.getTeamByIdProvider(id));
     return Card(
       shape: RoundedRectangleBorder(

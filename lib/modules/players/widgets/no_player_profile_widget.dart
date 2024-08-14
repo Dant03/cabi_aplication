@@ -77,9 +77,9 @@ class NoPlayerProfileWidget extends ConsumerWidget {
                         const SizedBox(height: 30),
                         ElevatedButton(
                           onPressed: () async {
-                            print("boton presionado");
+                            
                             final dateSplit = birthDayCtrl.text.split('-');
-                            print(dateSplit);
+                            
                             final playerSubmit = PlayerModel(
                               userId: userId,
                               playerDni: dniCtrl.text,
@@ -91,7 +91,7 @@ class NoPlayerProfileWidget extends ConsumerWidget {
                                 int.parse(dateSplit[2]),
                               ),
                             );
-                            print(playerSubmit.toJson());
+                            
                             ref.read(
                               PlayerProvider.postPlayerProfile(playerSubmit),
                             );

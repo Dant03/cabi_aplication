@@ -61,19 +61,16 @@ class TournamentByIdView extends ConsumerWidget {
                 const SizedBox(height: 8),
                 Column(
                   children: [
-                    if (tournament.teams == null)
-                      const Text('No hay equipos en el torneo'),
+                    if (tournament.teams == null || tournament.teams!.isEmpty)
+                      const Text('Aún no hay equipos en el torneo'),
                     if (tournament.teams != null)
-                      ...tournament.teams!
-                          .map((t) => TeamDetailWidget(t.teamId!))
+                      ...tournament.teams!.map((t) => TeamDetailWidget(t.teamId!))
                   ],
                 ),
               ],
             ),
           ),
-          error: (obj, str) => Center(
-            child: Text('${obj.toString()}:::${str.toString()}'),
-          ),
+          error: (obj, str) => Center(child: Text('${obj.toString()}:::${str.toString()}')),
           loading: () => const Center(child: CircularProgressIndicator()),
         ),
       ),

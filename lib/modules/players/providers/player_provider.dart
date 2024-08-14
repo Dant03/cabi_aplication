@@ -2,11 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:movil_cabi_app/config/dio_config.dart';
 import 'package:movil_cabi_app/modules/players/models/player_model.dart';
+import 'package:movil_cabi_app/routes/app_routes.dart';
 
 class PlayerProvider {
-
   static final playerProvider = StateProvider((ref) => PlayerModel());
-
 
   static final getPlayerProfileByUserId =
       FutureProvider.autoDispose.family<PlayerModel, int?>((ref, id) async {
@@ -19,7 +18,6 @@ class PlayerProvider {
   static final postPlayerProfile =
       FutureProvider.family<void, PlayerModel>((ref, player) async {
     try {
-      print("En el provider");
       final response = await dio.post('/players', data: {
         "player_dni": player.playerDni,
         "player_phone": player.playerPhone,
@@ -27,8 +25,7 @@ class PlayerProvider {
         "player_birthdate": player.playerBirthdate.toString(),
         "user_id": player.userId,
       });
-      print("respuesta del backend");
-      print(response.data);
+      
       if (response.statusCode != 200) {
         ref.read(playerProvider.notifier).update((s) => s = PlayerModel());
         Get.snackbar('Error',
@@ -36,13 +33,17 @@ class PlayerProvider {
         return;
       } else {
         ref.invalidate(getPlayerProfileByUserId(player.userId));
-        ref.read(playerProvider.notifier).update((s) => PlayerModel.fromJson(response.data));
-        Get.back();
+        ref
+            .read(playerProvider.notifier)
+            .update((s) => PlayerModel.fromJson(response.data));
+
+        if (Get.isBottomSheetOpen == true) Get.back();
+        Get.offAllNamed(AppRoutes.player);
+        return;
       }
     } catch (e) {
-      print('Excepcion del player provider');
       print(e);
-      throw Exception();
+      throw Exception(e);
     }
   });
 }
